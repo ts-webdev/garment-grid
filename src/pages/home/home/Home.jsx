@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../../shared/navbar/Navbar';
 import Banner from '../banner/Banner';
+import OurProducts from '../ourProducts/OurProducts';
 
 const Home = () => {
     return (
@@ -9,6 +10,9 @@ const Home = () => {
                 <Navbar/>
                 <Banner/>
             </header>
+            <main className='bg-accent'>
+                <OurProducts/>
+            </main>
         </>
     );
 };

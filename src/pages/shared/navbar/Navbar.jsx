@@ -14,7 +14,16 @@ const Navbar = () => {
         <NavLink className="btn btn-outline hover:bg-primary hover:text-accent" to="/all-products">All Products</NavLink>
       </li>
       <li>
-        <Link className="btn btn-secondary hover:bg-primary hover:text-accent" to="/login">Login</Link>
+        <NavLink className="btn btn-outline hover:bg-primary hover:text-accent" to="/about">About Us</NavLink>
+      </li>
+      <li>
+        <NavLink className="btn btn-outline hover:bg-primary hover:text-accent" to="/contact">Contact</NavLink>
+      </li>
+      <li>
+        <Link className="btn btn-outline hover:bg-primary hover:text-accent" to="/login">Login</Link>
+      </li>
+      <li>
+        <Link className="btn btn-outline hover:bg-primary hover:text-accent" to="/register">Register</Link>
       </li>
     </>
   );
@@ -42,16 +51,16 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 space-y-2 p-2 shadow"
             >
               {links}
             </ul>
           </div>
-          <a className="flex items-center gap-1 text-4xl racing-sans font-black">
-            <img className="w-10" src={logo} alt="" />
+          <a className="flex items-center gap-1 sm:text-4xl text-2xl racing-sans font-black">
+            <img className="sm:w-10 w-7" src={logo} alt="" />
             GarmentGrid</a>
         </div>
-        <div className="navbar-end">
+        <div className="navbar-end hidden lg:flex">
           <ul className="menu menu-horizontal px-1 gap-2">
             {links}
           </ul>
