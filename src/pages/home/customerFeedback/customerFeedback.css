@@ -1,0 +1,56 @@
+/* Custom Swiper Styles */
+.swiper-pagination-bullet {
+  width: 12px !important;
+  height: 12px !important;
+  background: #d1d5db !important;
+  opacity: 0.5 !important;
+  transition: all 0.3s ease !important;
+}
+
+.swiper-pagination-bullet-active {
+  width: 32px !important;
+  border-radius: 8px !important;
+  opacity: 1 !important;
+  background: #3b82f6 !important;
+}
+
+.swiper-slide {
+  height: auto !important;
+}
+
+/* Gradient border effect */
+.testimonial-card {
+  position: relative;
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.testimonial-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 1.125rem;
+  background: linear-gradient(45deg, #3b82f6, #10b981, #8b5cf6);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.testimonial-card:hover::before {
+  opacity: 1;
+}
+
+/* Floating animation for cards */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.swiper-slide-active .testimonial-card {
+  animation: float 6s ease-in-out infinite;
+}
