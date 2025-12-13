@@ -7,12 +7,12 @@ const OurProducts = () => {
   return (
     <Container>
       {/* title */}
-      <div className="pb-48">
+      <div className="py-10 ">
         <SectionTitle title={"Our Signature Collections"}>
           Our Products
         </SectionTitle>
         {/* Cards */}
-        <div className="grid grid-cols-4 gap-10 mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-10 mt-10">
           <ProductCard />
           <ProductCard />
           <ProductCard />

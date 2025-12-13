@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../../shared/navbar/Navbar';
 import Banner from '../banner/Banner';
 import OurProducts from '../ourProducts/OurProducts';
+import Footer from '../../shared/footer/Footer';
 
 const Home = () => {
     return (
@@ -10,9 +11,10 @@ const Home = () => {
                 <Navbar/>
                 <Banner/>
             </header>
-            <main className='bg-accent'>
+            <main>
                 <OurProducts/>
             </main>
+            <Footer/>
         </>
     );
 };
