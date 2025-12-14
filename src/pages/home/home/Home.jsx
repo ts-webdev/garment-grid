@@ -4,6 +4,7 @@ import Banner from "../banner/Banner";
 import OurProducts from "../ourProducts/OurProducts";
 import Footer from "../../shared/footer/Footer";
 import CustomerFeedback from "../customerFeedback/CustomerFeedback";
+import WhyChooseUs from "../whyChooseUs/WhyChooseUs";
 
 const Home = () => {
   return (
@@ -24,6 +25,7 @@ const Home = () => {
       </header>
       <main>
         <OurProducts />
+        <WhyChooseUs/>
         <CustomerFeedback />
       </main>
       <Footer />

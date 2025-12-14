@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <Container>
       <div className="navbar text-primary">
-        <div className="navbar-start ">
+        <div className="navbar-start w-1/4">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
@@ -60,7 +60,7 @@ const Navbar = () => {
             <img className="sm:w-10 w-7" src={logo} alt="" />
             GarmentGrid</a>
         </div>
-        <div className="navbar-end hidden lg:flex">
+        <div className="navbar-end hidden w-3/4 lg:flex">
           <ul className="menu menu-horizontal px-1 gap-2">
             {links}
           </ul>
