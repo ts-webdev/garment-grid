@@ -1,29 +1,59 @@
 import React from "react";
 import Container from "../../../components/shared/Container";
-import logo from "../../../assets/garment-grid.svg"
 import { Link, NavLink } from "react-router";
 import "./navbar.css";
+import Logo from "../../../components/shared/Logo";
 
 const Navbar = () => {
   const links = (
     <>
       <li>
-        <NavLink className="btn btn-outline hover:bg-primary hover:text-accent" to="/">Home</NavLink>
+        <NavLink
+          className="btn btn-outline hover:bg-primary hover:text-accent"
+          to="/"
+        >
+          Home
+        </NavLink>
       </li>
       <li>
-        <NavLink className="btn btn-outline hover:bg-primary hover:text-accent" to="/all-products">All Products</NavLink>
+        <NavLink
+          className="btn btn-outline hover:bg-primary hover:text-accent"
+          to="/all-products"
+        >
+          All Products
+        </NavLink>
       </li>
       <li>
-        <NavLink className="btn btn-outline hover:bg-primary hover:text-accent" to="/about">About Us</NavLink>
+        <NavLink
+          className="btn btn-outline hover:bg-primary hover:text-accent"
+          to="/about"
+        >
+          About Us
+        </NavLink>
       </li>
       <li>
-        <NavLink className="btn btn-outline hover:bg-primary hover:text-accent" to="/contact">Contact</NavLink>
+        <NavLink
+          className="btn btn-outline hover:bg-primary hover:text-accent"
+          to="/contact"
+        >
+          Contact
+        </NavLink>
       </li>
       <li>
-        <Link className="btn btn-outline hover:bg-primary hover:text-accent" to="/login">Login</Link>
+        <Link
+          className="btn btn-outline hover:bg-primary hover:text-accent"
+          to="/login"
+        >
+          Login
+        </Link>
       </li>
       <li>
-        <Link className="btn btn-outline hover:bg-primary hover:text-accent" to="/register">Register</Link>
+        <Link
+          className="btn btn-outline hover:bg-primary hover:text-accent"
+          to="/register"
+        >
+          Register
+        </Link>
       </li>
     </>
   );
@@ -56,14 +86,14 @@ const Navbar = () => {
               {links}
             </ul>
           </div>
-          <a className="flex items-center gap-1 sm:text-4xl text-2xl racing-sans font-black">
+          <Logo dark={true} />
+          {/* <a className="flex items-center gap-1 sm:text-4xl text-2xl racing-sans font-black">
             <img className="sm:w-10 w-7" src={logo} alt="" />
-            GarmentGrid</a>
+            GarmentGrid
+          </a> */}
         </div>
         <div className="navbar-end hidden w-3/4 lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-2">
-            {links}
-          </ul>
+          <ul className="menu menu-horizontal px-1 gap-2">{links}</ul>
         </div>
       </div>
     </Container>

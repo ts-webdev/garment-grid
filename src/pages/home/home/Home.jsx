@@ -5,6 +5,8 @@ import OurProducts from "../ourProducts/OurProducts";
 import Footer from "../../shared/footer/Footer";
 import CustomerFeedback from "../customerFeedback/CustomerFeedback";
 import WhyChooseUs from "../whyChooseUs/WhyChooseUs";
+import HowItWorks from "../howItWorks/HowItWorks";
+import ProductionStats from "../productionStats/ProductionStats";
 
 const Home = () => {
   return (
@@ -25,6 +27,8 @@ const Home = () => {
       </header>
       <main>
         <OurProducts />
+        <ProductionStats/>
+        <HowItWorks/>
         <WhyChooseUs/>
         <CustomerFeedback />
       </main>

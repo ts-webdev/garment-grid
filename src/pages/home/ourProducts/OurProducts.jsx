@@ -2,6 +2,7 @@ import React from "react";
 import Container from "../../../components/shared/Container";
 import SectionTitle from "../../../components/shared/SectionTitle";
 import ProductCard from "../../../components/productCard/ProductCard";
+import AnimationContainer from "../../../components/shared/AnimationContainer";
 
 const OurProducts = () => {
   return (
