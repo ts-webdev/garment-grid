@@ -8,22 +8,22 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300 pt-20 pb-8 relative overflow-hidden">
+    <footer className="bg-[#4d3d30] text-[#e8e0d4]/90 pt-20 pb-8 relative overflow-hidden">
       {/* Decorative Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-64 h-64 bg-accent rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-primary rounded-full filter blur-3xl"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-64 h-64 bg-[#703B3B] rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#e8e0d4] rounded-full filter blur-3xl"></div>
       </div>
 
       <Container>
-        {/* Ready for Project Banner - Enhanced */}
-        <div className="relative bg-linear-to-r from-primary to-accent p-8 lg:p-10 rounded-2xl mb-16 shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
+        {/* Ready for Project Banner - Updated Colors */}
+        <div className="relative bg-[#703B3B] p-8 lg:p-10 rounded-2xl  mb-16 shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
           <div className="absolute inset-0 bg-black opacity-10 rounded-2xl"></div>
           <div className="relative flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="lg:flex w-16 h-16 bg-white/20 rounded-full backdrop-blur-sm flex items-center justify-center">
+              <div className="hidden lg:flex w-16 h-16 bg-[#e8e0d4]/20 rounded-full backdrop-blur-sm items-center justify-center">
                 <svg
-                  className="w-8 h-8 text-white"
+                  className="w-8 h-8 text-[#e8e0d4]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -37,15 +37,15 @@ const Footer = () => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-white">
+                <h2 className="text-2xl lg:text-3xl font-bold text-[#e8e0d4]">
                   Ready to Transform Your Production?
                 </h2>
-                <p className="text-white/80 text-sm lg:text-base mt-1">
+                <p className="text-[#e8e0d4]/80 text-sm lg:text-base mt-1">
                   Join 500+ manufacturers who trust GarmentGrid
                 </p>
               </div>
             </div>
-            <button className="group bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center gap-2">
+            <button className="group bg-[#e8e0d4] text-[#4d3d30] px-8 py-4 rounded-lg font-semibold hover:bg-white hover:shadow-xl transition-all duration-300 flex items-center gap-2">
               Contact Sales Team
               <svg
                 className="w-5 h-5 group-hover:translate-x-1 transition-transform"
@@ -68,9 +68,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
           {/* Company Info - Logo & Description */}
           <div className="lg:col-span-4 space-y-5">
-            <div className="bg-white/5 p-6 rounded-xl backdrop-blur-sm">
-              <Logo className="text-white" />
-              <p className="text-sm leading-relaxed mt-4 text-gray-400">
+            <div className="bg-[#e8e0d4]/5 p-6 rounded-xl backdrop-blur-sm border border-[#e8e0d4]/10">
+              <Logo className="text-[#e8e0d4]" />
+              <p className="text-sm leading-relaxed mt-4 text-[#e8e0d4]/70">
                 GarmentGrid is the leading production tracking platform for
                 garment manufacturers. We help factories digitize their
                 workflow, reduce errors, and deliver on time, every time.
@@ -83,21 +83,21 @@ const Footer = () => {
                 {[1, 2, 3, 4].map((item) => (
                   <div
                     key={item}
-                    className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-accent border-2 border-gray-900"
+                    className="w-8 h-8 rounded-full bg-gradient-to-br from-[#703B3B] to-[#e8e0d4]/50 border-2 border-[#4d3d30]"
                   ></div>
                 ))}
               </div>
               <p className="text-sm">
-                <span className="font-bold text-white">500+</span>
-                <span className="text-gray-400"> manufacturers trust us</span>
+                <span className="font-bold text-[#e8e0d4]">500+</span>
+                <span className="text-[#e8e0d4]/60"> manufacturers trust us</span>
               </p>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="lg:col-span-2">
-            <h3 className="text-white font-bold text-lg mb-5 flex items-center gap-2">
-              <span className="w-1 h-6 bg-accent rounded-full"></span>
+            <h3 className="text-[#e8e0d4] font-bold text-lg mb-5 flex items-center gap-2">
+              <span className="w-1 h-6 bg-[#703B3B] rounded-full"></span>
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -111,9 +111,9 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-accent transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-[#e8e0d4]/60 hover:text-[#e8e0d4] transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="w-1 h-1 bg-gray-500 rounded-full group-hover:bg-accent group-hover:w-2 transition-all"></span>
+                    <span className="w-1 h-1 bg-[#e8e0d4]/30 rounded-full group-hover:bg-[#703B3B] group-hover:w-2 transition-all"></span>
                     {link.name}
                   </Link>
                 </li>
@@ -123,8 +123,8 @@ const Footer = () => {
 
           {/* Support & Help */}
           <div className="lg:col-span-2">
-            <h3 className="text-white font-bold text-lg mb-5 flex items-center gap-2">
-              <span className="w-1 h-6 bg-accent rounded-full"></span>
+            <h3 className="text-[#e8e0d4] font-bold text-lg mb-5 flex items-center gap-2">
+              <span className="w-1 h-6 bg-[#703B3B] rounded-full"></span>
               Support
             </h3>
             <ul className="space-y-3">
@@ -138,9 +138,9 @@ const Footer = () => {
                 <li key={item}>
                   <Link
                     to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="text-gray-400 hover:text-accent transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-[#e8e0d4]/60 hover:text-[#e8e0d4] transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="w-1 h-1 bg-gray-500 rounded-full group-hover:bg-accent group-hover:w-2 transition-all"></span>
+                    <span className="w-1 h-1 bg-[#e8e0d4]/30 rounded-full group-hover:bg-[#703B3B] group-hover:w-2 transition-all"></span>
                     {item}
                   </Link>
                 </li>
@@ -150,30 +150,30 @@ const Footer = () => {
 
           {/* Contact Information */}
           <div className="lg:col-span-4">
-            <h3 className="text-white font-bold text-lg mb-5 flex items-center gap-2">
-              <span className="w-1 h-6 bg-accent rounded-full"></span>
+            <h3 className="text-[#e8e0d4] font-bold text-lg mb-5 flex items-center gap-2">
+              <span className="w-1 h-6 bg-[#703B3B] rounded-full"></span>
               Get in Touch
             </h3>
-            <div className="bg-white/5 p-6 rounded-xl backdrop-blur-sm space-y-4">
+            <div className="bg-[#e8e0d4]/5 p-6 rounded-xl backdrop-blur-sm space-y-4 border border-[#e8e0d4]/10">
               <div className="flex items-start gap-3">
-                <FaMapMarkerAlt className="text-accent mt-1 shrink-0" />
-                <p className="text-sm text-gray-300">
+                <FaMapMarkerAlt className="text-[#703B3B] mt-1 shrink-0" />
+                <p className="text-sm text-[#e8e0d4]/80">
                   123 Garment Street, Fashion District,
                   <br />
                   Dhaka - 1205, Bangladesh
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <FaPhone className="text-accent shrink-0" />
-                <p className="text-sm text-gray-300">+880 1234 567890</p>
+                <FaPhone className="text-[#703B3B] shrink-0" />
+                <p className="text-sm text-[#e8e0d4]/80">+880 1234 567890</p>
               </div>
               <div className="flex items-center gap-3">
-                <FaEnvelope className="text-accent shrink-0" />
-                <p className="text-sm text-gray-300">contact@garmentgrid.com</p>
+                <FaEnvelope className="text-[#703B3B] shrink-0" />
+                <p className="text-sm text-[#e8e0d4]/80">contact@garmentgrid.com</p>
               </div>
               <div className="flex items-center gap-3">
-                <FaClock className="text-accent shrink-0" />
-                <p className="text-sm text-gray-300">
+                <FaClock className="text-[#703B3B] shrink-0" />
+                <p className="text-sm text-[#e8e0d4]/80">
                   Mon - Fri: 9:00 AM - 6:00 PM (GMT+6)
                 </p>
               </div>
@@ -182,29 +182,29 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar - Copyright & Social Links */}
-        <div className="border-t border-gray-800 pt-8 mt-8">
+        <div className="border-t border-[#e8e0d4]/20 pt-8 mt-8">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             {/* Copyright */}
-            <div className="text-sm text-gray-400 text-center lg:text-left">
+            <div className="text-sm text-[#e8e0d4]/60 text-center lg:text-left">
               <p>© {currentYear} GarmentGrid. All rights reserved.</p>
               <p className="mt-1 text-xs">
                 Designed & Developed with ❤️ for Garment Industry
               </p>
             </div>
 
-            {/* Social Links - Updated with X logo and modern design */}
+            {/* Social Links - Updated with brand colors */}
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-400 hidden lg:block">
+              <span className="text-sm text-[#e8e0d4]/60 hidden lg:block">
                 Follow us:
               </span>
               <div className="flex gap-3">
                 <a
                   href="#"
-                  className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+                  className="w-10 h-10 rounded-lg bg-[#703B3B]/30 hover:bg-[#703B3B] flex items-center justify-center transition-all duration-300 hover:scale-110 group border border-[#e8e0d4]/20"
                   aria-label="X (Twitter)"
                 >
                   <svg
-                    className="w-5 h-5 text-gray-300 group-hover:text-white"
+                    className="w-5 h-5 text-[#e8e0d4]/80 group-hover:text-white"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >
@@ -213,11 +213,11 @@ const Footer = () => {
                 </a>
                 <a
                   href="#"
-                  className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+                  className="w-10 h-10 rounded-lg bg-[#703B3B]/30 hover:bg-[#703B3B] flex items-center justify-center transition-all duration-300 hover:scale-110 group border border-[#e8e0d4]/20"
                   aria-label="LinkedIn"
                 >
                   <svg
-                    className="w-5 h-5 text-gray-300 group-hover:text-white"
+                    className="w-5 h-5 text-[#e8e0d4]/80 group-hover:text-white"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -226,11 +226,11 @@ const Footer = () => {
                 </a>
                 <a
                   href="#"
-                  className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+                  className="w-10 h-10 rounded-lg bg-[#703B3B]/30 hover:bg-[#703B3B] flex items-center justify-center transition-all duration-300 hover:scale-110 group border border-[#e8e0d4]/20"
                   aria-label="Facebook"
                 >
                   <svg
-                    className="w-5 h-5 text-gray-300 group-hover:text-white"
+                    className="w-5 h-5 text-[#e8e0d4]/80 group-hover:text-white"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -239,11 +239,11 @@ const Footer = () => {
                 </a>
                 <a
                   href="#"
-                  className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+                  className="w-10 h-10 rounded-lg bg-[#703B3B]/30 hover:bg-[#703B3B] flex items-center justify-center transition-all duration-300 hover:scale-110 group border border-[#e8e0d4]/20"
                   aria-label="Instagram"
                 >
                   <svg
-                    className="w-5 h-5 text-gray-300 group-hover:text-white"
+                    className="w-5 h-5 text-[#e8e0d4]/80 group-hover:text-white"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -253,20 +253,20 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Payment Methods */}
+            {/* Payment Methods - Updated */}
             <div className="hidden lg:flex items-center gap-3">
-              <span className="text-xs text-gray-500">We Accept:</span>
+              <span className="text-xs text-[#e8e0d4]/60">We Accept:</span>
               <div className="flex gap-2">
-                <span className="px-2 py-1 bg-gray-800 rounded text-xs text-gray-400">
+                <span className="px-2 py-1 bg-[#703B3B]/30 rounded text-xs text-[#e8e0d4]/80 border border-[#e8e0d4]/20">
                   Visa
                 </span>
-                <span className="px-2 py-1 bg-gray-800 rounded text-xs text-gray-400">
+                <span className="px-2 py-1 bg-[#703B3B]/30 rounded text-xs text-[#e8e0d4]/80 border border-[#e8e0d4]/20">
                   Master
                 </span>
-                <span className="px-2 py-1 bg-gray-800 rounded text-xs text-gray-400">
+                <span className="px-2 py-1 bg-[#703B3B]/30 rounded text-xs text-[#e8e0d4]/80 border border-[#e8e0d4]/20">
                   BKash
                 </span>
-                <span className="px-2 py-1 bg-gray-800 rounded text-xs text-gray-400">
+                <span className="px-2 py-1 bg-[#703B3B]/30 rounded text-xs text-[#e8e0d4]/80 border border-[#e8e0d4]/20">
                   Nagad
                 </span>
               </div>
@@ -274,19 +274,19 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Newsletter Signup - Optional */}
-        <div className="mt-8 pt-8 border-t border-gray-800/50">
+        {/* Newsletter Signup - Updated */}
+        <div className="mt-8 pt-8 border-t border-[#e8e0d4]/20">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-[#e8e0d4]/70">
               📧 Subscribe to get updates about new collections and offers
             </p>
             <div className="flex w-full sm:w-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-l-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-accent w-full sm:w-64"
+                className="px-4 py-2 bg-[#e8e0d4]/10 border border-[#e8e0d4]/20 rounded-l-lg text-sm text-[#e8e0d4] placeholder-[#e8e0d4]/50 focus:outline-none focus:border-[#703B3B] w-full sm:w-64"
               />
-              <button className="px-4 py-2 bg-accent text-white rounded-r-lg hover:bg-accent/80 transition-colors text-sm font-medium">
+              <button className="px-4 py-2 bg-[#703B3B] text-[#e8e0d4] rounded-r-lg hover:bg-[#703B3B]/80 transition-colors text-sm font-medium">
                 Subscribe
               </button>
             </div>

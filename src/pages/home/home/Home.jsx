@@ -7,6 +7,7 @@ import CustomerFeedback from "../customerFeedback/CustomerFeedback";
 import WhyChooseUs from "../whyChooseUs/WhyChooseUs";
 import HowItWorks from "../howItWorks/HowItWorks";
 import ProductionStats from "../productionStats/ProductionStats";
+import Sustainability from "../sustainability/Sustainability";
 
 const Home = () => {
   return (
@@ -22,17 +23,16 @@ const Home = () => {
             backgroundSize: "50px 50px",
           }}
         />
-        <Navbar />
         <Banner />
       </header>
       <main>
         <OurProducts />
-        <ProductionStats/>
-        <HowItWorks/>
-        <WhyChooseUs/>
+        <ProductionStats />
+        <HowItWorks />
+        <WhyChooseUs />
         <CustomerFeedback />
+        <Sustainability />
       </main>
-      <Footer />
     </>
   );
 };

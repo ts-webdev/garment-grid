@@ -87,10 +87,6 @@ const Navbar = () => {
             </ul>
           </div>
           <Logo dark={true} />
-          {/* <a className="flex items-center gap-1 sm:text-4xl text-2xl racing-sans font-black">
-            <img className="sm:w-10 w-7" src={logo} alt="" />
-            GarmentGrid
-          </a> */}
         </div>
         <div className="navbar-end hidden w-3/4 lg:flex">
           <ul className="menu menu-horizontal px-1 gap-2">{links}</ul>
