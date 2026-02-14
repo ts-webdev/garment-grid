@@ -1,43 +1,61 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaEnvelope, FaLock, FaGoogle, FaArrowRight, FaEye, FaEyeSlash } from "react-icons/fa";
-import Container from "../../components/shared/Container";
-import Logo from "../../components/shared/Logo";
+import {
+  FaEnvelope,
+  FaLock,
+  FaGoogle,
+  FaArrowRight,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
+import Container from "../../../components/shared/Container";
+import useAuth from "../../../hooks/useAuth";
 
 const Login = () => {
+  const { signIn, googleLogin, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  // ✅ react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  // ✅ Email login
+  const onSubmit = async (data) => {
+    try {
+      await signIn(data.email, data.password);
+      toast.success("Login successful!");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Login functionality will be added later
-    console.log("Login clicked", formData);
-  };
+  // ✅ Google login
+  const handleGoogleLogin = async () => {
+    try {
+      await googleLogin();
 
-  const handleGoogleLogin = () => {
-    // Google login functionality will be added later
-    console.log("Google login clicked");
+      // 🔴 TODO: save user to DB (if new)
+
+      toast.success("Google login successful!");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
-    <div className=" bg-linear-to-br from-[#e8e0d4]/30 via-white to-[#e8e0d4]/30  pt-40 -mt-20 pb-20">
+    <div className="bg-linear-to-br from-[#e8e0d4]/30 via-white to-[#e8e0d4]/30 pt-40 -mt-20 pb-20">
       <Container>
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 ">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           
-          {/* Left Side - Branding & Illustration */}
-          <motion.div 
+          {/* Left Side */}
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -53,49 +71,10 @@ const Login = () => {
                 Track your orders, manage production, and stay connected with your manufacturing partners.
               </p>
             </div>
-
-            {/* Features List */}
-            <div className="space-y-4">
-              {[
-                "Real-time order tracking",
-                "Production stage updates",
-                "Instant notifications",
-                "Secure payments"
-              ].map((feature, idx) => (
-                <motion.div 
-                  key={idx}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="w-5 h-5 rounded-full bg-[#703B3B]/10 flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#703B3B]"></div>
-                  </div>
-                  <span className="text-gray-700">{feature}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Stats */}
-            <div className="flex items-center gap-8 pt-4">
-              <div>
-                <p className="text-2xl font-bold text-[#4d3d30]">500+</p>
-                <p className="text-sm text-gray-500">Manufacturers</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-[#4d3d30]">1.2M</p>
-                <p className="text-sm text-gray-500">Orders</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-[#4d3d30]">15+</p>
-                <p className="text-sm text-gray-500">Countries</p>
-              </div>
-            </div>
           </motion.div>
 
-          {/* Right Side - Login Form */}
-          <motion.div 
+          {/* Right Side Form */}
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -103,7 +82,7 @@ const Login = () => {
           >
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#e8e0d4]">
               
-              {/* Form Header */}
+              {/* Header */}
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-[#4d3d30] racing-sans">
                   Sign In
@@ -113,10 +92,10 @@ const Login = () => {
                 </p>
               </div>
 
-              {/* Login Form */}
-              <form onSubmit={handleSubmit} className="space-y-6">
+              {/* FORM */}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
-                {/* Email Field */}
+                {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address
@@ -127,17 +106,19 @@ const Login = () => {
                     </div>
                     <input
                       type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
+                      {...register("email", { required: "Email is required" })}
                       className="block w-full pl-10 pr-3 py-3 border border-[#e8e0d4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#703B3B] focus:border-transparent transition-all bg-white/50"
                       placeholder="you@example.com"
                     />
                   </div>
+                  {errors.email && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
 
-                {/* Password Field */}
+                {/* Password */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Password
@@ -148,10 +129,9 @@ const Login = () => {
                     </div>
                     <input
                       type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      required
+                      {...register("password", {
+                        required: "Password is required",
+                      })}
                       className="block w-full pl-10 pr-12 py-3 border border-[#e8e0d4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#703B3B] focus:border-transparent transition-all bg-white/50"
                       placeholder="••••••••"
                     />
@@ -167,33 +147,20 @@ const Login = () => {
                       )}
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
-                {/* Remember Me & Forgot Password */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-[#703B3B] focus:ring-[#703B3B] border-gray-300 rounded"
-                    />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-600">
-                      Remember me
-                    </label>
-                  </div>
-                  <div className="text-sm">
-                    <a href="#" className="text-[#703B3B] hover:text-[#4d3d30] transition-colors">
-                      Forgot password?
-                    </a>
-                  </div>
-                </div>
-
-                {/* Submit Button */}
+                {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full bg-[#4d3d30] hover:bg-[#703B3B] text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group"
+                  disabled={loading}
+                  className="w-full bg-[#4d3d30] hover:bg-[#703B3B] text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-60"
                 >
-                  Sign In
+                  {loading ? "Signing in..." : "Sign In"}
                   <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </form>
@@ -204,11 +171,13 @@ const Login = () => {
                   <div className="w-full border-t border-[#e8e0d4]"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">Or continue with</span>
+                  <span className="px-4 bg-white text-gray-500">
+                    Or continue with
+                  </span>
                 </div>
               </div>
 
-              {/* Google Login Button */}
+              {/* Google */}
               <button
                 onClick={handleGoogleLogin}
                 className="w-full bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg border border-[#e8e0d4] transition-all duration-300 flex items-center justify-center gap-3 group"
@@ -223,25 +192,13 @@ const Login = () => {
               {/* Register Link */}
               <p className="mt-8 text-center text-sm text-gray-600">
                 Don't have an account?{" "}
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="font-semibold text-[#703B3B] hover:text-[#4d3d30] transition-colors underline underline-offset-2"
                 >
                   Create free account
                 </Link>
               </p>
-
-              {/* Demo Credentials */}
-              <div className="mt-6 p-4 bg-[#e8e0d4]/30 rounded-lg border border-[#e8e0d4]">
-                <p className="text-xs text-gray-500 mb-2 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-[#703B3B] rounded-full"></span>
-                  Demo credentials:
-                </p>
-                <div className="text-xs text-gray-600 space-y-1">
-                  <p><span className="font-medium">buyer@example.com</span> / buyer123</p>
-                  <p><span className="font-medium">manager@example.com</span> / manager123</p>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>

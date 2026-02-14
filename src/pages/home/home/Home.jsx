@@ -12,7 +12,7 @@ import Sustainability from "../sustainability/Sustainability";
 const Home = () => {
   return (
     <>
-      <header className="bg-accent py-5 relative">
+      <header className="bg-accent py-5 relative pt-30 -mt-20">
         <div
           className="absolute inset-0 opacity-8 z-0"
           style={{
