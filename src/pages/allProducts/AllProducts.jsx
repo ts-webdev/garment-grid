@@ -6,155 +6,16 @@ import {
   FaFilter, 
   FaTimes,
   FaChevronDown,
-  FaBoxOpen,
-  FaShoppingBag,
-  FaEye,
-  FaSortAmountDown,
-  FaSortAmountUp,
-  FaStar,
-  FaStarHalfAlt
+  FaBoxOpen
 } from "react-icons/fa";
 import Container from "../../components/shared/Container";
-import SectionTitle from "../../components/shared/SectionTitle";
-
-// Temporary mock data - will be replaced with MongoDB data later
-const mockProducts = [
-  {
-    _id: "1",
-    name: "Premium Cotton T-Shirt",
-    category: "T-Shirts",
-    price: 12.99,
-    quantity: 1500,
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500",
-    rating: 4.5,
-    minOrder: 50,
-    description: "High-quality cotton t-shirt, perfect for everyday wear"
-  },
-  {
-    _id: "2",
-    name: "Classic Denim Jacket",
-    category: "Jackets",
-    price: 45.99,
-    quantity: 500,
-    image: "https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=500",
-    rating: 4.8,
-    minOrder: 25,
-    description: "Vintage style denim jacket with premium finish"
-  },
-  {
-    _id: "3",
-    name: "Slim Fit Chinos",
-    category: "Pants",
-    price: 29.99,
-    quantity: 800,
-    image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500",
-    rating: 4.3,
-    minOrder: 40,
-    description: "Comfortable slim fit chinos for casual and formal wear"
-  },
-  {
-    _id: "4",
-    name: "Hooded Sweatshirt",
-    category: "Hoodies",
-    price: 34.99,
-    quantity: 600,
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500",
-    rating: 4.6,
-    minOrder: 30,
-    description: "Warm and comfortable hoodie with kangaroo pocket"
-  },
-  {
-    _id: "5",
-    name: "Summer Linen Shirt",
-    category: "Shirts",
-    price: 24.99,
-    quantity: 700,
-    image: "https://images.unsplash.com/photo-1598033121418-5e17a7c3b1d9?w=500",
-    rating: 4.4,
-    minOrder: 35,
-    description: "Breathable linen shirt perfect for summer"
-  },
-  {
-    _id: "6",
-    name: "Cargo Pants",
-    category: "Pants",
-    price: 39.99,
-    quantity: 450,
-    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500",
-    rating: 4.2,
-    minOrder: 30,
-    description: "Durable cargo pants with multiple pockets"
-  },
-  {
-    _id: "7",
-    name: "Wool Blend Coat",
-    category: "Jackets",
-    price: 89.99,
-    quantity: 200,
-    image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=500",
-    rating: 4.9,
-    minOrder: 15,
-    description: "Elegant wool blend coat for winter"
-  },
-  {
-    _id: "8",
-    name: "Polo Shirt",
-    category: "T-Shirts",
-    price: 18.99,
-    quantity: 1200,
-    image: "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=500",
-    rating: 4.5,
-    minOrder: 50,
-    description: "Classic polo shirt with embroidered logo"
-  },
-  {
-    _id: "9",
-    name: "Leather Jacket",
-    category: "Jackets",
-    price: 149.99,
-    quantity: 150,
-    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
-    rating: 4.7,
-    minOrder: 10,
-    description: "Genuine leather jacket with modern design"
-  },
-  {
-    _id: "10",
-    name: "Sweatpants",
-    category: "Pants",
-    price: 22.99,
-    quantity: 900,
-    image: "https://images.unsplash.com/photo-1556902458-ce87af7e7ab3?w=500",
-    rating: 4.1,
-    minOrder: 40,
-    description: "Comfortable sweatpants for lounging"
-  },
-  {
-    _id: "11",
-    name: "Denim Shirt",
-    category: "Shirts",
-    price: 32.99,
-    quantity: 400,
-    image: "https://images.unsplash.com/photo-1598033121418-5e17a7c3b1d9?w=500",
-    rating: 4.3,
-    minOrder: 25,
-    description: "Classic denim shirt, goes with everything"
-  },
-  {
-    _id: "12",
-    name: "Track Jacket",
-    category: "Jackets",
-    price: 42.99,
-    quantity: 350,
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500",
-    rating: 4.4,
-    minOrder: 30,
-    description: "Sporty track jacket with stripes"
-  }
-];
+import ProductCard from "../../components/shared/ProductCard";
+import useAxios from "../../hooks/useAxios";
 
 const AllProducts = () => {
-  const [products, setProducts] = useState([]);
+  const { getData } = useAxios();
+  
+  const [products, setProducts] = useState([]); // ✅ Default empty array
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -163,53 +24,90 @@ const AllProducts = () => {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 200 });
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 9;
+  const [error, setError] = useState(null); // ✅ Error state
+  const productsPerPage = 8;
 
-  // Get unique categories
-  const categories = ["All", ...new Set(mockProducts.map(p => p.category))];
-
+  // Fetch products from API
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setProducts(mockProducts);
-      setFilteredProducts(mockProducts);
-      setLoading(false);
-    }, 1000);
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getData("/products");
+        console.log("API Response:", data); // ✅ Debug: check what API returns
+        
+        // ✅ Safety check: ensure data is array
+        if (Array.isArray(data)) {
+          setProducts(data);
+          setFilteredProducts(data);
+        } else if (data?.data && Array.isArray(data.data)) {
+          // If API returns { data: [...] }
+          setProducts(data.data);
+          setFilteredProducts(data.data);
+        } else if (data?.products && Array.isArray(data.products)) {
+          // If API returns { products: [...] }
+          setProducts(data.products);
+          setFilteredProducts(data.products);
+        } else {
+          console.error("API did not return array:", data);
+          setProducts([]);
+          setFilteredProducts([]);
+          setError("Invalid data format received from server");
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        setError(error?.response?.data?.message || "Failed to load products");
+        setProducts([]);
+        setFilteredProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
+
+  // Get unique categories - with safety check
+  const categories = products?.length > 0 
+    ? ["All", ...new Set(products.map(p => p?.category).filter(Boolean))]
+    : ["All"];
 
   // Filter and sort products
   useEffect(() => {
+    if (!products?.length) return;
+    
     let result = [...products];
 
     // Apply search
     if (searchTerm) {
       result = result.filter(p => 
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchTerm.toLowerCase())
+        p?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p?.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p?.brand?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Apply category filter
     if (selectedCategory !== "All") {
-      result = result.filter(p => p.category === selectedCategory);
+      result = result.filter(p => p?.category === selectedCategory);
     }
 
     // Apply price range filter
-    result = result.filter(p => p.price >= priceRange.min && p.price <= priceRange.max);
+    result = result.filter(p => p?.price >= priceRange.min && p?.price <= priceRange.max);
 
     // Apply sorting
     if (sortBy === "price-low") {
-      result.sort((a, b) => a.price - b.price);
+      result.sort((a, b) => (a?.price || 0) - (b?.price || 0));
     } else if (sortBy === "price-high") {
-      result.sort((a, b) => b.price - a.price);
+      result.sort((a, b) => (b?.price || 0) - (a?.price || 0));
     } else if (sortBy === "name-asc") {
-      result.sort((a, b) => a.name.localeCompare(b.name));
+      result.sort((a, b) => (a?.name || "").localeCompare(b?.name || ""));
     } else if (sortBy === "name-desc") {
-      result.sort((a, b) => b.name.localeCompare(a.name));
+      result.sort((a, b) => (b?.name || "").localeCompare(a?.name || ""));
     } else if (sortBy === "quantity") {
-      result.sort((a, b) => b.quantity - a.quantity);
+      result.sort((a, b) => (b?.inventory?.available || b?.quantity || 0) - (a?.inventory?.available || a?.quantity || 0));
     } else if (sortBy === "rating") {
-      result.sort((a, b) => b.rating - a.rating);
+      result.sort((a, b) => (b?.rating || 0) - (a?.rating || 0));
     }
 
     setFilteredProducts(result);
@@ -219,8 +117,8 @@ const AllProducts = () => {
   // Pagination
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const currentProducts = filteredProducts?.slice(indexOfFirstProduct, indexOfLastProduct) || [];
+  const totalPages = Math.ceil((filteredProducts?.length || 0) / productsPerPage);
 
   // Clear all filters
   const clearFilters = () => {
@@ -230,21 +128,26 @@ const AllProducts = () => {
     setPriceRange({ min: 0, max: 200 });
   };
 
-  // Rating stars component
-  const RatingStars = ({ rating }) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    
+  // Error display
+  if (error) {
     return (
-      <div className="flex items-center gap-0.5">
-        {[...Array(fullStars)].map((_, i) => (
-          <FaStar key={i} className="text-yellow-400 text-xs" />
-        ))}
-        {hasHalfStar && <FaStarHalfAlt className="text-yellow-400 text-xs" />}
-        <span className="text-xs text-gray-500 ml-1">({rating})</span>
+      <div className="min-h-screen mt-20">
+        <Container>
+          <div className="text-center py-20">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h3 className="text-xl font-bold text-[#4d3d30] mb-2">Error Loading Products</h3>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-[#703B3B] text-white px-6 py-2 rounded-lg hover:bg-[#4d3d30] transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </Container>
       </div>
     );
-  };
+  }
 
   return (
     <div className="bg-white min-h-screen mt-20">
@@ -334,26 +237,28 @@ const AllProducts = () => {
               <div className="bg-[#e8e0d4]/10 p-6 rounded-lg border border-[#e8e0d4]">
                 <div className="flex flex-wrap items-center gap-6">
                   {/* Category Filter */}
-                  <div className="flex-1 min-w-[200px]">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Category
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {categories.map((category) => (
-                        <button
-                          key={category}
-                          onClick={() => setSelectedCategory(category)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                            selectedCategory === category
-                              ? "bg-[#703B3B] text-white"
-                              : "bg-white border border-[#e8e0d4] text-gray-600 hover:border-[#703B3B] hover:text-[#703B3B]"
-                          }`}
-                        >
-                          {category}
-                        </button>
-                      ))}
+                  {categories.length > 1 && (
+                    <div className="flex-1 min-w-[200px]">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Category
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {categories.map((category) => (
+                          <button
+                            key={category}
+                            onClick={() => setSelectedCategory(category)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                              selectedCategory === category
+                                ? "bg-[#703B3B] text-white"
+                                : "bg-white border border-[#e8e0d4] text-gray-600 hover:border-[#703B3B] hover:text-[#703B3B]"
+                            }`}
+                          >
+                            {category}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Price Range Filter */}
                   <div className="flex-1 min-w-[250px]">
@@ -393,16 +298,16 @@ const AllProducts = () => {
 
             {/* Results Count */}
             <div className="mt-4 text-sm text-gray-600">
-              Showing {indexOfFirstProduct + 1} - {Math.min(indexOfLastProduct, filteredProducts.length)} of {filteredProducts.length} products
+              Showing {filteredProducts?.length > 0 ? indexOfFirstProduct + 1 : 0} - {Math.min(indexOfLastProduct, filteredProducts?.length || 0)} of {filteredProducts?.length || 0} products
             </div>
           </div>
 
           {/* Products Grid */}
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <div className="w-12 h-12 border-4 border-[#e8e0d4] border-t-[#703B3B] rounded-full animate-spin"></div>
+              <div className="w-16 h-16 border-4 border-[#e8e0d4] border-t-[#703B3B] rounded-full animate-spin"></div>
             </div>
-          ) : filteredProducts.length === 0 ? (
+          ) : !filteredProducts?.length ? (
             <div className="text-center py-20">
               <div className="text-6xl mb-4">😕</div>
               <h3 className="text-xl font-bold text-[#4d3d30] mb-2">No Products Found</h3>
@@ -416,75 +321,9 @@ const AllProducts = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {currentProducts.map((product, index) => (
-                  <motion.div
-                    key={product._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.05 }}
-                    whileHover={{ y: -5 }}
-                    className="group"
-                  >
-                    <div className="bg-white rounded-xl overflow-hidden border border-[#e8e0d4] hover:border-[#703B3B]/30 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-                      {/* Product Image */}
-                      <div className="relative h-64 overflow-hidden bg-gray-100">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        
-                        {/* Quick View Badge */}
-                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-[#703B3B]">
-                          MOQ: {product.minOrder} pcs
-                        </div>
-                      </div>
-
-                      {/* Product Info */}
-                      <div className="p-5 flex-1 flex flex-col">
-                        {/* Category */}
-                        <p className="text-xs text-[#703B3B] font-medium mb-2">
-                          {product.category}
-                        </p>
-
-                        {/* Name */}
-                        <h3 className="text-lg font-bold text-[#4d3d30] mb-2 line-clamp-2">
-                          {product.name}
-                        </h3>
-
-                        {/* Rating */}
-                        <RatingStars rating={product.rating} />
-
-                        {/* Price and Quantity */}
-                        <div className="flex items-center justify-between mt-3 mb-4">
-                          <div>
-                            <p className="text-2xl font-bold text-[#703B3B]">
-                              ${product.price.toFixed(2)}
-                            </p>
-                            <p className="text-xs text-gray-500">per piece</p>
-                          </div>
-                          <div className="text-right">
-                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                              <FaBoxOpen className="text-[#4d3d30]" />
-                              <span className="font-medium">{product.quantity.toLocaleString()}</span>
-                            </div>
-                            <p className="text-xs text-gray-500">available</p>
-                          </div>
-                        </div>
-
-                        {/* View Details Button */}
-                        <Link
-                          to={`/product/${product._id}`}
-                          className="mt-auto w-full bg-gradient-to-r from-[#4d3d30] to-[#703B3B] hover:from-[#703B3B] hover:to-[#4d3d30] text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn"
-                        >
-                          <FaEye className="group-hover/btn:scale-110 transition-transform" />
-                          View Details
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
+                  <ProductCard key={product?._id || index} product={product} index={index} />
                 ))}
               </div>
 

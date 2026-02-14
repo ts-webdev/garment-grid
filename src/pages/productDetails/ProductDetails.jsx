@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { 
-  FaBoxOpen, 
-  FaShoppingBag, 
-  FaTruck, 
+import {
+  FaBoxOpen,
+  FaShoppingBag,
+  FaTruck,
   FaCheckCircle,
   FaArrowLeft,
   FaMinus,
@@ -21,7 +21,7 @@ import {
   FaStarHalfAlt,
   FaShieldAlt,
   FaUndo,
-  FaHeadset
+  FaHeadset,
 } from "react-icons/fa";
 import { GiSewingMachine, GiCutDiamond, GiRolledCloth } from "react-icons/gi";
 import Container from "../../components/shared/Container";
@@ -31,7 +31,8 @@ import SectionTitle from "../../components/shared/SectionTitle";
 const mockProduct = {
   _id: "1",
   name: "Premium Cotton T-Shirt",
-  description: "High-quality cotton t-shirt, perfect for everyday wear. Made from 100% organic cotton with a comfortable fit and durable stitching. Ideal for custom printing and bulk orders.",
+  description:
+    "High-quality cotton t-shirt, perfect for everyday wear. Made from 100% organic cotton with a comfortable fit and durable stitching. Ideal for custom printing and bulk orders.",
   category: "T-Shirts",
   price: 12.99,
   quantity: 1500,
@@ -39,7 +40,7 @@ const mockProduct = {
   images: [
     "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800",
     "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800",
-    "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800"
+    "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800",
   ],
   demoVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
   rating: 4.5,
@@ -52,10 +53,10 @@ const mockProduct = {
     sizes: ["S", "M", "L", "XL", "XXL"],
     colors: ["Black", "White", "Navy", "Gray"],
     country: "Bangladesh",
-    leadTime: "15-20 days"
+    leadTime: "15-20 days",
   },
   createdBy: "Manager",
-  createdAt: "2024-01-15"
+  createdAt: "2024-01-15",
 };
 
 const ProductDetails = () => {
@@ -71,7 +72,7 @@ const ProductDetails = () => {
     lastName: "",
     contactNumber: "",
     deliveryAddress: "",
-    additionalNotes: ""
+    additionalNotes: "",
   });
 
   // Mock user state - will be replaced with actual auth
@@ -79,7 +80,7 @@ const ProductDetails = () => {
     isLoggedIn: true,
     email: "john.doe@example.com",
     role: "buyer",
-    status: "active"
+    status: "active",
   });
 
   useEffect(() => {
@@ -92,17 +93,17 @@ const ProductDetails = () => {
 
   const handleQuantityChange = (type) => {
     if (type === "increment" && quantity < product.quantity) {
-      setQuantity(prev => prev + 1);
+      setQuantity((prev) => prev + 1);
     } else if (type === "decrement" && quantity > product.minOrder) {
-      setQuantity(prev => prev - 1);
+      setQuantity((prev) => prev - 1);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -115,9 +116,9 @@ const ProductDetails = () => {
       quantity,
       totalPrice: quantity * product.price,
       ...formData,
-      userEmail: user.email
+      userEmail: user.email,
     });
-    
+
     // Redirect to payment if needed
     if (product.paymentOptions.includes("Stripe")) {
       navigate("/payment");
@@ -146,8 +147,12 @@ const ProductDetails = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold text-[#4d3d30] mb-2">Product Not Found</h2>
-          <p className="text-gray-600 mb-6">The product you're looking for doesn't exist or has been removed.</p>
+          <h2 className="text-2xl font-bold text-[#4d3d30] mb-2">
+            Product Not Found
+          </h2>
+          <p className="text-gray-600 mb-6">
+            The product you're looking for doesn't exist or has been removed.
+          </p>
           <Link
             to="/all-products"
             className="bg-[#703B3B] text-white px-6 py-2 rounded-lg hover:bg-[#4d3d30] transition-colors"
@@ -160,14 +165,14 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen mt-20">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#4d3d30] to-[#703B3B] text-white py-12 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-[#e8e0d4] rounded-full filter blur-3xl"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#e8e0d4] rounded-full filter blur-3xl"></div>
         </div>
-        
+
         <Container>
           <div className="relative z-10">
             <Link
@@ -216,7 +221,11 @@ const ProductDetails = () => {
                           : "border-transparent hover:border-[#e8e0d4]"
                       }`}
                     >
-                      <img src={img} alt={`Thumbnail ${index + 1}`} className="w-full h-20 object-cover" />
+                      <img
+                        src={img}
+                        alt={`Thumbnail ${index + 1}`}
+                        className="w-full h-20 object-cover"
+                      />
                     </button>
                   ))}
                 </div>
@@ -224,16 +233,29 @@ const ProductDetails = () => {
                 {/* Demo Video Link */}
                 {product.demoVideo && (
                   <div className="mt-6 p-4 bg-[#e8e0d4]/10 rounded-lg border border-[#e8e0d4]">
-                    <p className="text-sm font-medium text-[#4d3d30] mb-2">Product Demo Video</p>
+                    <p className="text-sm font-medium text-[#4d3d30] mb-2">
+                      Product Demo Video
+                    </p>
                     <a
                       href={product.demoVideo}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#703B3B] hover:text-[#4d3d30] text-sm flex items-center gap-2"
                     >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M10 15l5-3-5-3v6z" />
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          fill="none"
+                        />
                       </svg>
                       Watch Video
                     </a>
@@ -261,17 +283,19 @@ const ProductDetails = () => {
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => (
+                  {[...Array(5)].map((_, i) =>
                     i < Math.floor(product.rating) ? (
                       <FaStar key={i} className="text-yellow-400" />
                     ) : i < product.rating ? (
                       <FaStarHalfAlt key={i} className="text-yellow-400" />
                     ) : (
                       <FaStar key={i} className="text-gray-300" />
-                    )
-                  ))}
+                    ),
+                  )}
                 </div>
-                <span className="text-sm text-gray-500">({product.reviews} reviews)</span>
+                <span className="text-sm text-gray-500">
+                  ({product.reviews} reviews)
+                </span>
               </div>
 
               {/* Price */}
@@ -284,8 +308,12 @@ const ProductDetails = () => {
 
               {/* Description */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-[#4d3d30] mb-2">Description</h3>
-                <p className="text-gray-600 leading-relaxed">{product.description}</p>
+                <h3 className="text-lg font-semibold text-[#4d3d30] mb-2">
+                  Description
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {product.description}
+                </p>
               </div>
 
               {/* Availability */}
@@ -295,7 +323,9 @@ const ProductDetails = () => {
                     <FaBoxOpen />
                     <span className="font-medium">Available</span>
                   </div>
-                  <p className="text-2xl font-bold text-[#703B3B]">{product.quantity.toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-[#703B3B]">
+                    {product.quantity.toLocaleString()}
+                  </p>
                   <p className="text-xs text-gray-500">pieces in stock</p>
                 </div>
                 <div className="bg-[#e8e0d4]/20 p-4 rounded-lg">
@@ -303,14 +333,18 @@ const ProductDetails = () => {
                     <GiSewingMachine />
                     <span className="font-medium">Min. Order</span>
                   </div>
-                  <p className="text-2xl font-bold text-[#703B3B]">{product.minOrder}</p>
+                  <p className="text-2xl font-bold text-[#703B3B]">
+                    {product.minOrder}
+                  </p>
                   <p className="text-xs text-gray-500">pieces minimum</p>
                 </div>
               </div>
 
               {/* Payment Options */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">Payment Options</h3>
+                <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">
+                  Payment Options
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {product.paymentOptions.map((option, index) => (
                     <span
@@ -325,27 +359,39 @@ const ProductDetails = () => {
 
               {/* Specifications */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">Specifications</h3>
+                <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">
+                  Specifications
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-gray-500">Material</p>
-                    <p className="text-sm font-medium">{product.specifications.material}</p>
+                    <p className="text-sm font-medium">
+                      {product.specifications.material}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Weight</p>
-                    <p className="text-sm font-medium">{product.specifications.weight}</p>
+                    <p className="text-sm font-medium">
+                      {product.specifications.weight}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Fit</p>
-                    <p className="text-sm font-medium">{product.specifications.fit}</p>
+                    <p className="text-sm font-medium">
+                      {product.specifications.fit}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Country</p>
-                    <p className="text-sm font-medium">{product.specifications.country}</p>
+                    <p className="text-sm font-medium">
+                      {product.specifications.country}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Lead Time</p>
-                    <p className="text-sm font-medium">{product.specifications.leadTime}</p>
+                    <p className="text-sm font-medium">
+                      {product.specifications.leadTime}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -363,7 +409,9 @@ const ProductDetails = () => {
                 <div className="space-y-3">
                   {!user.isLoggedIn ? (
                     <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                      <p className="text-yellow-700 mb-2">Please login to place order</p>
+                      <p className="text-yellow-700 mb-2">
+                        Please login to place order
+                      </p>
                       <div className="flex gap-2 justify-center">
                         <Link
                           to="/login"
@@ -381,11 +429,16 @@ const ProductDetails = () => {
                     </div>
                   ) : user.role !== "buyer" ? (
                     <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-                      <p className="text-blue-700">Managers and Admins cannot place orders</p>
+                      <p className="text-blue-700">
+                        Managers and Admins cannot place orders
+                      </p>
                     </div>
                   ) : user.status !== "active" ? (
                     <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200">
-                      <p className="text-red-700">Your account is pending or suspended. Please contact support.</p>
+                      <p className="text-red-700">
+                        Your account is pending or suspended. Please contact
+                        support.
+                      </p>
                     </div>
                   ) : null}
                 </div>
@@ -413,7 +466,9 @@ const ProductDetails = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6 border-b border-[#e8e0d4] flex items-center justify-between sticky top-0 bg-white">
-                <h2 className="text-xl font-bold text-[#4d3d30]">Order Booking Form</h2>
+                <h2 className="text-xl font-bold text-[#4d3d30]">
+                  Order Booking Form
+                </h2>
                 <button
                   onClick={() => setShowBookingForm(false)}
                   className="w-8 h-8 rounded-full bg-[#e8e0d4]/30 flex items-center justify-center hover:bg-[#703B3B]/10 transition-colors"
@@ -426,14 +481,18 @@ const ProductDetails = () => {
                 {/* Read-only fields */}
                 <div className="bg-[#e8e0d4]/20 p-4 rounded-lg space-y-3">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Email</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      Email
+                    </label>
                     <div className="flex items-center gap-2 text-[#4d3d30] font-medium">
                       <FaEnvelope className="text-[#703B3B]" />
                       {user.email}
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Product</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      Product
+                    </label>
                     <div className="flex items-center gap-2 text-[#4d3d30] font-medium">
                       <FaShoppingBag className="text-[#703B3B]" />
                       {product.name}
@@ -488,7 +547,17 @@ const ProductDetails = () => {
                       <input
                         type="number"
                         value={quantity}
-                        onChange={(e) => setQuantity(Math.min(product.quantity, Math.max(product.minOrder, parseInt(e.target.value) || product.minOrder)))}
+                        onChange={(e) =>
+                          setQuantity(
+                            Math.min(
+                              product.quantity,
+                              Math.max(
+                                product.minOrder,
+                                parseInt(e.target.value) || product.minOrder,
+                              ),
+                            ),
+                          )
+                        }
                         min={product.minOrder}
                         max={product.quantity}
                         className="w-20 text-center border-x border-[#e8e0d4] py-2 focus:outline-none"
@@ -581,7 +650,9 @@ const ProductDetails = () => {
 
                 {/* Payment Info */}
                 <div className="bg-[#e8e0d4]/20 p-4 rounded-lg">
-                  <p className="text-sm font-medium text-[#4d3d30] mb-2">Payment Method</p>
+                  <p className="text-sm font-medium text-[#4d3d30] mb-2">
+                    Payment Method
+                  </p>
                   <p className="text-sm text-gray-600 mb-2">
                     You will be redirected to payment page after submission.
                   </p>
@@ -621,22 +692,34 @@ const ProductDetails = () => {
               <div className="w-16 h-16 rounded-full bg-[#703B3B]/10 flex items-center justify-center mx-auto mb-4">
                 <GiCutDiamond className="text-3xl text-[#703B3B]" />
               </div>
-              <h3 className="text-lg font-bold text-[#4d3d30] mb-2">Premium Quality</h3>
-              <p className="text-sm text-gray-600">Highest quality materials and craftsmanship</p>
+              <h3 className="text-lg font-bold text-[#4d3d30] mb-2">
+                Premium Quality
+              </h3>
+              <p className="text-sm text-gray-600">
+                Highest quality materials and craftsmanship
+              </p>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 rounded-full bg-[#703B3B]/10 flex items-center justify-center mx-auto mb-4">
                 <FaTruck className="text-3xl text-[#703B3B]" />
               </div>
-              <h3 className="text-lg font-bold text-[#4d3d30] mb-2">Global Shipping</h3>
-              <p className="text-sm text-gray-600">Fast and reliable shipping worldwide</p>
+              <h3 className="text-lg font-bold text-[#4d3d30] mb-2">
+                Global Shipping
+              </h3>
+              <p className="text-sm text-gray-600">
+                Fast and reliable shipping worldwide
+              </p>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 rounded-full bg-[#703B3B]/10 flex items-center justify-center mx-auto mb-4">
                 <FaHeadset className="text-3xl text-[#703B3B]" />
               </div>
-              <h3 className="text-lg font-bold text-[#4d3d30] mb-2">24/7 Support</h3>
-              <p className="text-sm text-gray-600">Dedicated support team for all inquiries</p>
+              <h3 className="text-lg font-bold text-[#4d3d30] mb-2">
+                24/7 Support
+              </h3>
+              <p className="text-sm text-gray-600">
+                Dedicated support team for all inquiries
+              </p>
             </div>
           </div>
         </Container>
