@@ -14,10 +14,14 @@ import toast from "react-hot-toast";
 
 import Container from "../../../components/shared/Container";
 import useAuth from "../../../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { signIn, googleLogin, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
 
   // ✅ react-hook-form
   const {
@@ -31,6 +35,7 @@ const Login = () => {
     try {
       await signIn(data.email, data.password);
       toast.success("Login successful!");
+      navigate(from, { replace: true });
     } catch (error) {
       toast.error(error.message);
     }
@@ -44,6 +49,7 @@ const Login = () => {
       // 🔴 TODO: save user to DB (if new)
 
       toast.success("Google login successful!");
+      navigate(from, { replace: true });
     } catch (error) {
       toast.error(error.message);
     }
@@ -53,7 +59,6 @@ const Login = () => {
     <div className="bg-linear-to-br from-[#e8e0d4]/30 via-white to-[#e8e0d4]/30 pt-40 -mt-20 pb-20">
       <Container>
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          
           {/* Left Side */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -68,7 +73,8 @@ const Login = () => {
                 <span className="text-[#703B3B] racing-sans">Back!</span>
               </h1>
               <p className="text-gray-600 text-lg max-w-md">
-                Track your orders, manage production, and stay connected with your manufacturing partners.
+                Track your orders, manage production, and stay connected with
+                your manufacturing partners.
               </p>
             </div>
           </motion.div>
@@ -81,7 +87,6 @@ const Login = () => {
             className="lg:w-1/2 w-full max-w-md"
           >
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#e8e0d4]">
-              
               {/* Header */}
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-[#4d3d30] racing-sans">
@@ -94,7 +99,6 @@ const Login = () => {
 
               {/* FORM */}
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

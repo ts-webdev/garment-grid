@@ -18,11 +18,15 @@ import toast from "react-hot-toast";
 
 import Container from "../../../components/shared/Container";
 import useAuth from "../../../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const { register: registerUser, googleLogin, loading } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
 
   // ✅ react-hook-form
   const {
@@ -54,18 +58,14 @@ const Register = () => {
   //  Register submit
   const onSubmit = async (data) => {
     try {
-      await registerUser(
-        data.email,
-        data.password,
-        data.name,
-        data.photoURL
-      );
+      await registerUser(data.email, data.password, data.name, data.photoURL);
 
       // 🔴 TODO: save user to DB
       // role: data.role
       // status: pending
 
       toast.success("Registration successful!");
+      navigate(from, { replace: true });
     } catch (error) {
       toast.error(error.message);
     }
@@ -79,6 +79,7 @@ const Register = () => {
       // 🔴 TODO: save user to DB
 
       toast.success("Google login successful!");
+      navigate(from, { replace: true });
     } catch (error) {
       toast.error(error.message);
     }
@@ -88,7 +89,6 @@ const Register = () => {
     <div className="bg-linear-to-br from-[#e8e0d4]/30 via-white to-[#e8e0d4]/30 pt-40 -mt-20 pb-20">
       <Container>
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 max-w-7xl mx-auto">
-          
           {/* Left Side */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -100,12 +100,11 @@ const Register = () => {
               <h1 className="text-4xl lg:text-5xl font-bold">
                 <span className="racing-sans text-[#4d3d30]">Join</span>
                 <br />
-                <span className="text-[#703B3B] racing-sans">
-                  GarmentGrid
-                </span>
+                <span className="text-[#703B3B] racing-sans">GarmentGrid</span>
               </h1>
               <p className="text-gray-600 text-lg max-w-md">
-                Start your journey with the leading production tracking platform.
+                Start your journey with the leading production tracking
+                platform.
               </p>
             </div>
           </motion.div>
@@ -118,7 +117,6 @@ const Register = () => {
             className="lg:w-1/2 w-full max-w-md"
           >
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#e8e0d4]">
-              
               {/* Header */}
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-[#4d3d30] racing-sans">
@@ -128,7 +126,6 @@ const Register = () => {
 
               {/* FORM */}
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                
                 {/* Name */}
                 <div>
                   <label className="label-text">Full Name</label>
@@ -206,13 +203,31 @@ const Register = () => {
 
                 {/* Password Rules */}
                 <div className="text-xs space-y-1">
-                  <p className={passwordErrors.hasUppercase ? "text-green-600" : "text-gray-400"}>
+                  <p
+                    className={
+                      passwordErrors.hasUppercase
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }
+                  >
                     ✓ Uppercase letter
                   </p>
-                  <p className={passwordErrors.hasLowercase ? "text-green-600" : "text-gray-400"}>
+                  <p
+                    className={
+                      passwordErrors.hasLowercase
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }
+                  >
                     ✓ Lowercase letter
                   </p>
-                  <p className={passwordErrors.hasLength ? "text-green-600" : "text-gray-400"}>
+                  <p
+                    className={
+                      passwordErrors.hasLength
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }
+                  >
                     ✓ Minimum 6 characters
                   </p>
                 </div>
