@@ -26,44 +26,16 @@ import {
 import { GiSewingMachine, GiCutDiamond, GiRolledCloth } from "react-icons/gi";
 import Container from "../../components/shared/Container";
 import SectionTitle from "../../components/shared/SectionTitle";
-
-// Mock data - will be replaced with MongoDB data later
-const mockProduct = {
-  _id: "1",
-  name: "Premium Cotton T-Shirt",
-  description:
-    "High-quality cotton t-shirt, perfect for everyday wear. Made from 100% organic cotton with a comfortable fit and durable stitching. Ideal for custom printing and bulk orders.",
-  category: "T-Shirts",
-  price: 12.99,
-  quantity: 1500,
-  minOrder: 50,
-  images: [
-    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800",
-    "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800",
-    "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800",
-  ],
-  demoVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  rating: 4.5,
-  reviews: 128,
-  paymentOptions: ["Cash on Delivery", "Stripe", "PayFast"],
-  specifications: {
-    material: "100% Organic Cotton",
-    weight: "180 GSM",
-    fit: "Regular Fit",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "White", "Navy", "Gray"],
-    country: "Bangladesh",
-    leadTime: "15-20 days",
-  },
-  createdBy: "Manager",
-  createdAt: "2024-01-15",
-};
+import useAxios from "../../hooks/useAxios";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getData } = useAxios();
+  
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [quantity, setQuantity] = useState(50);
@@ -83,18 +55,48 @@ const ProductDetails = () => {
     status: "active",
   });
 
+  // Fetch product data from API
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setProduct(mockProduct);
-      setLoading(false);
-    }, 1000);
+    const fetchProduct = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getData(`/products/${id}`);
+        console.log("API Response:", data);
+        
+        // Handle different API response structures
+        if (data?.data) {
+          setProduct(data.data);
+          setQuantity(data.data?.inventory?.minOrder || data.data?.minOrder || 50);
+        } else if (data?.product) {
+          setProduct(data.product);
+          setQuantity(data.product?.inventory?.minOrder || data.product?.minOrder || 50);
+        } else {
+          setProduct(data);
+          setQuantity(data?.inventory?.minOrder || data?.minOrder || 50);
+        }
+      } catch (error) {
+        console.error("Failed to fetch product:", error);
+        setError(error?.response?.data?.message || "Failed to load product");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+    }
   }, [id]);
 
   const handleQuantityChange = (type) => {
-    if (type === "increment" && quantity < product.quantity) {
+    if (!product) return;
+    
+    const maxQty = product?.inventory?.available || product?.quantity || 0;
+    const minQty = product?.inventory?.minOrder || product?.minOrder || 1;
+    
+    if (type === "increment" && quantity < maxQty) {
       setQuantity((prev) => prev + 1);
-    } else if (type === "decrement" && quantity > product.minOrder) {
+    } else if (type === "decrement" && quantity > minQty) {
       setQuantity((prev) => prev - 1);
     }
   };
@@ -114,13 +116,13 @@ const ProductDetails = () => {
       productId: product._id,
       productName: product.name,
       quantity,
-      totalPrice: quantity * product.price,
+      totalPrice: quantity * (product?.price || 0),
       ...formData,
       userEmail: user.email,
     });
 
     // Redirect to payment if needed
-    if (product.paymentOptions.includes("Stripe")) {
+    if (product?.paymentOptions?.includes("Stripe")) {
       navigate("/payment");
     } else {
       // Show success message and redirect to dashboard
@@ -132,8 +134,24 @@ const ProductDetails = () => {
     return user.isLoggedIn && user.role === "buyer" && user.status === "active";
   };
 
-  const totalPrice = quantity * (product?.price || 0);
+  // Get values with fallbacks
+  const productName = product?.name || "";
+  const productCategory = product?.category || "";
+  const productPrice = product?.price || 0;
+  const productDescription = product?.description || "";
+  const productRating = product?.rating || 0;
+  const productReviews = product?.reviewsCount || product?.reviews || 0;
+  const productQuantity = product?.inventory?.available || product?.quantity || 0;
+  const productMinOrder = product?.inventory?.minOrder || product?.minOrder || 1;
+  const productImages = product?.images?.gallery || product?.images || [];
+  const productThumbnail = product?.images?.thumbnail || productImages[0] || "";
+  const productPaymentOptions = product?.paymentOptions || [];
+  const productSpecs = product?.specifications || {};
+  const productDemoVideo = product?.video?.demo || product?.demoVideo || "";
+  
+  const totalPrice = quantity * productPrice;
 
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -142,6 +160,28 @@ const ProductDetails = () => {
     );
   }
 
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-[#4d3d30] mb-2">
+            Error Loading Product
+          </h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Link
+            to="/all-products"
+            className="bg-[#703B3B] text-white px-6 py-2 rounded-lg hover:bg-[#4d3d30] transition-colors"
+          >
+            Browse Products
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Not found state
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -203,41 +243,43 @@ const ProductDetails = () => {
                 {/* Main Image */}
                 <div className="bg-[#e8e0d4]/10 rounded-2xl overflow-hidden mb-4 border border-[#e8e0d4]">
                   <img
-                    src={product.images[selectedImage]}
-                    alt={product.name}
+                    src={productImages[selectedImage] || productThumbnail}
+                    alt={productName}
                     className="w-full h-96 object-cover"
                   />
                 </div>
 
                 {/* Thumbnails */}
-                <div className="grid grid-cols-4 gap-4">
-                  {product.images.map((img, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === index
-                          ? "border-[#703B3B] scale-105"
-                          : "border-transparent hover:border-[#e8e0d4]"
-                      }`}
-                    >
-                      <img
-                        src={img}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-20 object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
+                {productImages.length > 1 && (
+                  <div className="grid grid-cols-4 gap-4">
+                    {productImages.slice(0, 4).map((img, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={`rounded-lg overflow-hidden border-2 transition-all ${
+                          selectedImage === index
+                            ? "border-[#703B3B] scale-105"
+                            : "border-transparent hover:border-[#e8e0d4]"
+                        }`}
+                      >
+                        <img
+                          src={img}
+                          alt={`Thumbnail ${index + 1}`}
+                          className="w-full h-20 object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
 
                 {/* Demo Video Link */}
-                {product.demoVideo && (
+                {productDemoVideo && (
                   <div className="mt-6 p-4 bg-[#e8e0d4]/10 rounded-lg border border-[#e8e0d4]">
                     <p className="text-sm font-medium text-[#4d3d30] mb-2">
                       Product Demo Video
                     </p>
                     <a
-                      href={product.demoVideo}
+                      href={productDemoVideo}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#703B3B] hover:text-[#4d3d30] text-sm flex items-center gap-2"
@@ -272,49 +314,53 @@ const ProductDetails = () => {
             >
               {/* Category */}
               <p className="text-sm text-[#703B3B] font-medium mb-2">
-                {product.category}
+                {productCategory}
               </p>
 
               {/* Title */}
               <h1 className="text-3xl lg:text-4xl font-bold text-[#4d3d30] mb-4">
-                {product.name}
+                {productName}
               </h1>
 
               {/* Rating */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) =>
-                    i < Math.floor(product.rating) ? (
-                      <FaStar key={i} className="text-yellow-400" />
-                    ) : i < product.rating ? (
-                      <FaStarHalfAlt key={i} className="text-yellow-400" />
-                    ) : (
-                      <FaStar key={i} className="text-gray-300" />
-                    ),
-                  )}
+              {productRating > 0 && (
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center gap-0.5">
+                    {[...Array(5)].map((_, i) =>
+                      i < Math.floor(productRating) ? (
+                        <FaStar key={i} className="text-yellow-400" />
+                      ) : i < productRating ? (
+                        <FaStarHalfAlt key={i} className="text-yellow-400" />
+                      ) : (
+                        <FaStar key={i} className="text-gray-300" />
+                      ),
+                    )}
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    ({productReviews} reviews)
+                  </span>
                 </div>
-                <span className="text-sm text-gray-500">
-                  ({product.reviews} reviews)
-                </span>
-              </div>
+              )}
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-3xl font-bold text-[#703B3B]">
-                  ${product.price.toFixed(2)}
+                  ${productPrice.toFixed(2)}
                 </span>
                 <span className="text-sm text-gray-500">per piece</span>
               </div>
 
               {/* Description */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-[#4d3d30] mb-2">
-                  Description
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {product.description}
-                </p>
-              </div>
+              {productDescription && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-[#4d3d30] mb-2">
+                    Description
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {productDescription}
+                  </p>
+                </div>
+              )}
 
               {/* Availability */}
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -324,7 +370,7 @@ const ProductDetails = () => {
                     <span className="font-medium">Available</span>
                   </div>
                   <p className="text-2xl font-bold text-[#703B3B]">
-                    {product.quantity.toLocaleString()}
+                    {productQuantity.toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-500">pieces in stock</p>
                 </div>
@@ -334,67 +380,63 @@ const ProductDetails = () => {
                     <span className="font-medium">Min. Order</span>
                   </div>
                   <p className="text-2xl font-bold text-[#703B3B]">
-                    {product.minOrder}
+                    {productMinOrder}
                   </p>
                   <p className="text-xs text-gray-500">pieces minimum</p>
                 </div>
               </div>
 
               {/* Payment Options */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">
-                  Payment Options
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.paymentOptions.map((option, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-white border border-[#e8e0d4] rounded-full text-sm text-gray-600"
-                    >
-                      {option}
-                    </span>
-                  ))}
+              {productPaymentOptions.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">
+                    Payment Options
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {productPaymentOptions.map((option, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-white border border-[#e8e0d4] rounded-full text-sm text-gray-600"
+                      >
+                        {option}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Specifications */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">
-                  Specifications
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-gray-500">Material</p>
-                    <p className="text-sm font-medium">
-                      {product.specifications.material}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Weight</p>
-                    <p className="text-sm font-medium">
-                      {product.specifications.weight}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Fit</p>
-                    <p className="text-sm font-medium">
-                      {product.specifications.fit}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Country</p>
-                    <p className="text-sm font-medium">
-                      {product.specifications.country}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Lead Time</p>
-                    <p className="text-sm font-medium">
-                      {product.specifications.leadTime}
-                    </p>
+              {Object.keys(productSpecs).length > 0 && (
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-[#4d3d30] mb-3">
+                    Specifications
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {Object.entries(productSpecs).map(([key, value]) => {
+                      if (Array.isArray(value)) {
+                        return (
+                          <div key={key}>
+                            <p className="text-xs text-gray-500 capitalize">
+                              {key}
+                            </p>
+                            <p className="text-sm font-medium">
+                              {value.join(", ")}
+                            </p>
+                          </div>
+                        );
+                      }
+                      return (
+                        <div key={key}>
+                          <p className="text-xs text-gray-500 capitalize">
+                            {key}
+                          </p>
+                          <p className="text-sm font-medium">{value}</p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Order Button */}
               {canPlaceOrder() ? (
@@ -495,7 +537,7 @@ const ProductDetails = () => {
                     </label>
                     <div className="flex items-center gap-2 text-[#4d3d30] font-medium">
                       <FaShoppingBag className="text-[#703B3B]" />
-                      {product.name}
+                      {productName}
                     </div>
                   </div>
                 </div>
@@ -550,16 +592,16 @@ const ProductDetails = () => {
                         onChange={(e) =>
                           setQuantity(
                             Math.min(
-                              product.quantity,
+                              productQuantity,
                               Math.max(
-                                product.minOrder,
-                                parseInt(e.target.value) || product.minOrder,
+                                productMinOrder,
+                                parseInt(e.target.value) || productMinOrder,
                               ),
                             ),
                           )
                         }
-                        min={product.minOrder}
-                        max={product.quantity}
+                        min={productMinOrder}
+                        max={productQuantity}
                         className="w-20 text-center border-x border-[#e8e0d4] py-2 focus:outline-none"
                       />
                       <button
@@ -571,7 +613,7 @@ const ProductDetails = () => {
                       </button>
                     </div>
                     <p className="text-sm text-gray-500">
-                      Min: {product.minOrder} | Max: {product.quantity}
+                      Min: {productMinOrder} | Max: {productQuantity}
                     </p>
                   </div>
                 </div>
@@ -588,7 +630,7 @@ const ProductDetails = () => {
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Price per piece: ${product.price.toFixed(2)}
+                    Price per piece: ${productPrice.toFixed(2)}
                   </p>
                 </div>
 
