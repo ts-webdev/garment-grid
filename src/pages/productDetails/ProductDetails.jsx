@@ -32,7 +32,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getData } = useAxios();
-  
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,14 +63,18 @@ const ProductDetails = () => {
       try {
         const data = await getData(`/products/${id}`);
         console.log("API Response:", data);
-        
+
         // Handle different API response structures
         if (data?.data) {
           setProduct(data.data);
-          setQuantity(data.data?.inventory?.minOrder || data.data?.minOrder || 50);
+          setQuantity(
+            data.data?.inventory?.minOrder || data.data?.minOrder || 50,
+          );
         } else if (data?.product) {
           setProduct(data.product);
-          setQuantity(data.product?.inventory?.minOrder || data.product?.minOrder || 50);
+          setQuantity(
+            data.product?.inventory?.minOrder || data.product?.minOrder || 50,
+          );
         } else {
           setProduct(data);
           setQuantity(data?.inventory?.minOrder || data?.minOrder || 50);
@@ -90,10 +94,10 @@ const ProductDetails = () => {
 
   const handleQuantityChange = (type) => {
     if (!product) return;
-    
+
     const maxQty = product?.inventory?.available || product?.quantity || 0;
     const minQty = product?.inventory?.minOrder || product?.minOrder || 1;
-    
+
     if (type === "increment" && quantity < maxQty) {
       setQuantity((prev) => prev + 1);
     } else if (type === "decrement" && quantity > minQty) {
@@ -109,24 +113,40 @@ const ProductDetails = () => {
     }));
   };
 
-  const handleBookingSubmit = (e) => {
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    // Booking logic will be added later
-    console.log("Booking submitted:", {
+
+    const bookingData = {
       productId: product._id,
       productName: product.name,
+      pricePerPiece: product.price,
       quantity,
-      totalPrice: quantity * (product?.price || 0),
-      ...formData,
-      userEmail: user.email,
-    });
+      totalPrice: quantity * product.price,
+      email: user.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      contactNumber: formData.contactNumber,
+      deliveryAddress: formData.deliveryAddress,
+      additionalNotes: formData.additionalNotes,
+      paymentMethod: selectedPaymentMethod, // Add this state
+      status: "pending",
+    };
 
-    // Redirect to payment if needed
-    if (product?.paymentOptions?.includes("Stripe")) {
-      navigate("/payment");
+    if (selectedPaymentMethod === "Cash on Delivery") {
+      // Save COD order directly
+      try {
+        await postData("/bookings", {
+          ...bookingData,
+          paymentStatus: "pending",
+        });
+        toast.success("Order placed successfully!");
+        navigate("/dashboard/my-orders");
+      } catch (error) {
+        toast.error("Failed to place order");
+      }
     } else {
-      // Show success message and redirect to dashboard
-      navigate("/dashboard/my-orders");
+      // Redirect to payment page for online payment
+      navigate("/payment", { state: { bookingData } });
     }
   };
 
@@ -141,14 +161,16 @@ const ProductDetails = () => {
   const productDescription = product?.description || "";
   const productRating = product?.rating || 0;
   const productReviews = product?.reviewsCount || product?.reviews || 0;
-  const productQuantity = product?.inventory?.available || product?.quantity || 0;
-  const productMinOrder = product?.inventory?.minOrder || product?.minOrder || 1;
+  const productQuantity =
+    product?.inventory?.available || product?.quantity || 0;
+  const productMinOrder =
+    product?.inventory?.minOrder || product?.minOrder || 1;
   const productImages = product?.images?.gallery || product?.images || [];
   const productThumbnail = product?.images?.thumbnail || productImages[0] || "";
   const productPaymentOptions = product?.paymentOptions || [];
   const productSpecs = product?.specifications || {};
   const productDemoVideo = product?.video?.demo || product?.demoVideo || "";
-  
+
   const totalPrice = quantity * productPrice;
 
   // Loading state

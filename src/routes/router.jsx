@@ -12,6 +12,7 @@ import Register from "../pages/auth/register/Register";
 import ProductDetails from "../pages/productDetails/ProductDetails";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "./privateRoute/PrivateRoute";
+import Payment from "../pages/payment/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
         path: "/contact",
         Component: Contact,
       },
+      {
+        path: "payment",
+        element: <PrivateRoute><Payment></Payment></PrivateRoute>
+      }
     ],
   },
   {
