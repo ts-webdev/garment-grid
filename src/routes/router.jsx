@@ -13,6 +13,7 @@ import ProductDetails from "../pages/productDetails/ProductDetails";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 import Payment from "../pages/payment/Payment";
+import MyOrders from "../pages/dashboard/buyer/myOrders/MyOrders";
 
 export const router = createBrowserRouter([
   {
@@ -68,6 +69,11 @@ export const router = createBrowserRouter([
         <DashboardLayout />
       </PrivateRoute>
     ),
-    children: [],
+    children: [
+      {
+        path: "my-orders",
+        Component: MyOrders,
+      }
+    ],
   },
 ]);
