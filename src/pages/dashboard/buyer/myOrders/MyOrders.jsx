@@ -1,5 +1,5 @@
 // pages/dashboard/buyer/MyOrders.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -24,8 +24,6 @@ import {
   FaShoppingBag,
 } from "react-icons/fa";
 
-
-
 import toast from "react-hot-toast";
 import useAxios from "../../../../hooks/useAxios";
 import useAuth from "../../../../hooks/useAuth";
@@ -33,6 +31,7 @@ import useAuth from "../../../../hooks/useAuth";
 const MyOrders = () => {
   const { user } = useAuth();
   const { getData, deleteData } = useAxios();
+  const hasFetched = useRef(false);
 
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -43,6 +42,11 @@ const MyOrders = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelOrderId, setCancelOrderId] = useState(null);
   const [cancelling, setCancelling] = useState(false);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10
+  });
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,25 +57,48 @@ const MyOrders = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
 
-  // Fetch orders
+  // Fetch orders from backend
   useEffect(() => {
+    // Prevent double fetch in strict mode
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const fetchOrders = async () => {
-      if (!user?.email) return;
+      if (!user?.email) {
+        setLoading(false);
+        return;
+      }
 
       setLoading(true);
       setError(null);
 
       try {
-        const response = await getData(`/bookings/user/${user.email}`);
+        // Fetch from API with pagination
+        const response = await getData(
+          `/bookings/user/${user.email}?page=${currentPage}&limit=${itemsPerPage}`
+        );
+        
         console.log("Orders response:", response);
 
-        // Handle different response structures
-        const ordersData = response?.data || response || [];
-        setOrders(ordersData);
-        setFilteredOrders(ordersData);
+        // Handle backend response structure
+        if (response?.success && response?.data) {
+          setOrders(response.data);
+          setFilteredOrders(response.data);
+          setPagination({
+            total: response.total || 0,
+            page: response.page || 1,
+            limit: response.limit || 10
+          });
+        } else if (Array.isArray(response)) {
+          setOrders(response);
+          setFilteredOrders(response);
+        } else {
+          setOrders([]);
+          setFilteredOrders([]);
+        }
       } catch (error) {
         console.error("Failed to fetch orders:", error);
-        setError(error?.response?.data?.message || "Failed to load orders");
+        setError("Could not load your orders");
         toast.error("Could not load your orders");
       } finally {
         setLoading(false);
@@ -79,7 +106,12 @@ const MyOrders = () => {
     };
 
     fetchOrders();
-  }, [user?.email, getData]);
+
+    // Cleanup
+    return () => {
+      hasFetched.current = false;
+    };
+  }, [user?.email, currentPage, itemsPerPage]); // Add pagination dependencies
 
   // Apply filters
   useEffect(() => {
@@ -246,12 +278,16 @@ const MyOrders = () => {
   // Format date
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return "N/A";
+    }
   };
 
   // Format currency
@@ -282,17 +318,23 @@ const MyOrders = () => {
             <p className="text-white/80 text-sm mt-1">
               Track and manage your orders
             </p>
+            {error && (
+              <p className="text-xs text-yellow-300 mt-1 flex items-center gap-1">
+                <FaExclamationTriangle />
+                {error}
+              </p>
+            )}
           </div>
           <div className="flex gap-2">
             <button
-              onClick={() => {}}
+              onClick={() => toast.success("Export feature coming soon")}
               className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors"
             >
               <FaDownload />
               Export
             </button>
             <button
-              onClick={() => {}}
+              onClick={() => toast.success("Print feature coming soon")}
               className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors"
             >
               <FaPrint />
@@ -363,7 +405,7 @@ const MyOrders = () => {
         <div className="text-sm text-gray-500">
           Showing {filteredOrders.length > 0 ? indexOfFirstItem + 1 : 0} -{" "}
           {Math.min(indexOfLastItem, filteredOrders.length)} of{" "}
-          {filteredOrders.length} orders
+          {pagination.total || filteredOrders.length} orders
         </div>
       </div>
 
@@ -371,14 +413,6 @@ const MyOrders = () => {
       {loading ? (
         <div className="flex justify-center items-center py-20">
           <div className="w-12 h-12 border-4 border-[#e8e0d4] border-t-[#703B3B] rounded-full animate-spin"></div>
-        </div>
-      ) : error ? (
-        <div className="text-center py-20">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h3 className="text-xl font-bold text-[#4d3d30] mb-2">
-            Error Loading Orders
-          </h3>
-          <p className="text-gray-600">{error}</p>
         </div>
       ) : filteredOrders.length === 0 ? (
         <div className="text-center py-20 bg-[#e8e0d4]/10 rounded-lg">

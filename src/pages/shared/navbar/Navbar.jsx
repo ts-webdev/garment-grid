@@ -182,7 +182,7 @@ const Navbar = () => {
                   className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-52"
                 >
                   <li>
-                    <Link to="/dashboard">
+                    <Link to="/dashboard/profile">
                       <FaUserCircle /> Profile
                     </Link>
                   </li>
